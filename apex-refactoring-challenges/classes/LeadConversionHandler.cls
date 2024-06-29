@@ -10,7 +10,6 @@ public without sharing class LeadConversionHandler {
         a.Industry = l.Industry;
         a.Phone = l.Phone;
         a.Website = l.Website;
-        a.BillingAddress = l.Address;
 
         if (l.IsConverted) {
             return;
