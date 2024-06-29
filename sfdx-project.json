@@ -1,6 +1,10 @@
 {
   "packageDirectories": [
     {
+      "path": "force-app",
+      "default": false
+    },
+    {
       "path": "apex-refactoring-challenges",
       "default": true
     }
