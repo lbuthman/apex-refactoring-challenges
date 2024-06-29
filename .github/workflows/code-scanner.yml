@@ -1,4 +1,4 @@
-name: Code Scanner
+name: Apex Code/Design Tech Debt Analysis
 on:
   pull_request:
     types: [ labeled ]
@@ -21,8 +21,6 @@ jobs:
       - name: Run SFDX Scanner - Report findings as comments
         uses: mitchspano/sfdx-scan-pull-request@v[LATEST_VERSION_HERE]
         with:
-          pmdconfig: masterRuleset.xml
-          severity-threshold: 4
-          strictly-enforced-rules: '[{ "engine": "pmd", "category": "Performance", "rule": "AvoidDebugStatements" }]'
+          pmdconfig: level-0-tech-debt-ruleset.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
