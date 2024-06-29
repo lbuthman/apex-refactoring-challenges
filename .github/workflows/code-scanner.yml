@@ -1,4 +1,4 @@
-name: Apex Code/Design Tech Debt Analysis
+name: Apex Code/Design Tech Debt Scanner
 on:
   pull_request:
     types: [ labeled ]
