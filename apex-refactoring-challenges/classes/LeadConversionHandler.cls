@@ -15,7 +15,7 @@ public without sharing class LeadConversionHandler {
             return;
         }
 
-        if (a.Name != null && a.Industry != null) {
+        if (a.Name != null /*&& a.Industry != null*/) {
             insert a;
         } else {
             if (a.Phone != null || a.Website != null) {
@@ -32,26 +32,27 @@ public without sharing class LeadConversionHandler {
             }
         }
 
-        c.LastName = l.LastName;
-        c.FirstName = l.FirstName;
-        c.Phone = l.Phone;
-        c.Email = l.Email;
-        c.AccountId = a.Id;
-        if (c.LastName != null) {
-            insert c;
-        } else {
-            if (c.FirstName != null) {
-                if (c.Email != null) {
-                    c.LastName = 'Placeholder';
-                    insert c;
-                } else {
-                    if (c.Phone != null) {
-                        c.LastName = 'Placeholder';
-                        insert c;
-                    }
-                }
-            }
-        }
+// "ThePreviousConsultant" - 24-10-27 - commented out, as per SPN-1234
+//        c.LastName = l.LastName;
+//        c.FirstName = l.FirstName;
+//        c.Phone = l.Phone;
+//        c.Email = l.Email;
+//        c.AccountId = a.Id;
+//        if (c.LastName != null) {
+//            insert c;
+//        } else {
+//            if (c.FirstName != null) {
+//                if (c.Email != null) {
+//                    c.LastName = 'Placeholder';
+//                    insert c;
+//                } else {
+//                    if (c.Phone != null) {
+//                        c.LastName = 'Placeholder';
+//                        insert c;
+//                    }
+//                }
+//            }
+//        }
 
         o.Name = l.Company + ' Opportunity';
         o.StageName = 'Prospecting';
@@ -73,7 +74,7 @@ public without sharing class LeadConversionHandler {
             Task t = new Task();
             t.Subject = 'Follow up ' + (i + 1);
             t.WhatId = o.Id;
-            t.OwnerId = l.OwnerId;
+            t.OwnerId = UserInfo.getUserId();
             t.Status = 'Not Started';
             t.ReminderDateTime = Datetime.now().addDays(i);
             if (t.Subject != null) {
@@ -95,11 +96,12 @@ public without sharing class LeadConversionHandler {
             insert tList;
         }
 
+        LeadStatus convertStatus = [SELECT Id, ApiName FROM LeadStatus WHERE IsConverted=true LIMIT 1];
         Database.LeadConvert lc = new Database.LeadConvert();
         lc.setLeadId(l.Id);
-        lc.setConvertedStatus('Closed - Converted');
+        lc.setConvertedStatus(convertStatus.ApiName);
         lc.setAccountId(a.Id);
-        lc.setContactId(c.Id);
+//        lc.setContactId(c.Id);
         lc.setOpportunityId(o.Id);
 
         Database.LeadConvertResult lcr = Database.convertLead(lc);
