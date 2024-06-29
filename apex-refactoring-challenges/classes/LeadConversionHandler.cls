@@ -1,10 +1,13 @@
 public without sharing class LeadConversionHandler {
 
+    private static final LeadStatus convertStatus = [SELECT Id, apiname FROM LeadStatus WHERE Isconverted=true LIMIT 1];
+
     public void convertLead(Lead l) {
         Account a = new Account();
         Contact c = new Contact();
         Opportunity o = new Opportunity();
         List<Task> tList = new List<Task>();
+        Integer tNum = 5;
 
         a.Name = l.Company;
         a.Industry = l.Industry;
@@ -59,8 +62,10 @@ public without sharing class LeadConversionHandler {
         o.CloseDate = Date.today().addMonths(1);
         o.AccountId = a.Id;
         o.ContactId = c.Id;
-        if (o.Name != null && o.StageName != null && o.CloseDate != null) {
-            insert o;
+        if (o.Name != null) {
+            if (o.StageName != null && o.CloseDate != null)
+                System.debug('*** Lead conversion for opportunity ***');
+                insert o;
         } else {
             if (o.AccountId != null) {
                 if (o.ContactId != null) {
@@ -70,7 +75,7 @@ public without sharing class LeadConversionHandler {
             }
         }
 
-        for (Integer i = 0; i < 5; i++) {
+        for (Integer i = 0; i < tNum; i++) {
             Task t = new Task();
             t.Subject = 'Follow up ' + (i + 1);
             t.WhatId = o.Id;
@@ -96,7 +101,6 @@ public without sharing class LeadConversionHandler {
             insert tList;
         }
 
-        LeadStatus convertStatus = [SELECT Id, ApiName FROM LeadStatus WHERE IsConverted=true LIMIT 1];
         Database.LeadConvert lc = new Database.LeadConvert();
         lc.setLeadId(l.Id);
         lc.setConvertedStatus(convertStatus.ApiName);
