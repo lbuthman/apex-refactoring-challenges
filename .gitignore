@@ -53,3 +53,5 @@ target/
 .idea/
 force-app
 apex-refactoring-challenges.iml
+scans/
+run-tech-debt-pmd.sh
